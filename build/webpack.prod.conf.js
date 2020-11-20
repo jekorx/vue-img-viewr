@@ -21,6 +21,9 @@ module.exports = merge(baseWebpackConfig, {
     library: 'VueImgViewr',
     libraryTarget: 'commonjs2'
   },
+  externals: {
+    vue: 'vue'
+  },
   performance: {
     hints: false
   },
