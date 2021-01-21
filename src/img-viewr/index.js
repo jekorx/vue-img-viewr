@@ -40,7 +40,7 @@ const showImages = options => {
 
   options = Object.assign({
     urls: [],
-    zIndex: 2000,
+    zIndex: 3000,
     onSwitch: () => { },
     onClose: () => true,
     index: 0

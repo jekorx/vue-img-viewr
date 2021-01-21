@@ -1,7 +1,7 @@
 <template>
   <transition name="img-viewr-fade">
     <div v-show="visible" tabindex="-1" ref="img-viewr__wrapper" class="img-viewr__wrapper" :style="{ 'z-index': zIndex }">
-      <div class="img-viewr__mask"></div>
+      <div class="img-viewr__mask" @click.self="handleMaskClick"></div>
       <!-- CLOSE -->
       <span class="img-viewr__btn img-viewr__close" @click="hide">
         <i class="img-viewr__icon icon__circle-close"></i>
@@ -167,7 +167,7 @@ export default {
     },
     zIndex: {
       type: Number,
-      default: 2000
+      default: 3000
     },
     onSwitch: {
       type: Function,
@@ -180,6 +180,10 @@ export default {
     initialIndex: {
       type: Number,
       default: 0
+    },
+    closeOnClickMask: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -232,6 +236,11 @@ export default {
     this.deviceSupportUninstall()
   },
   methods: {
+    handleMaskClick () {
+      if (this.closeOnClickMask) {
+        this.hide()
+      }
+    },
     hide () {
       this.onClose()
     },

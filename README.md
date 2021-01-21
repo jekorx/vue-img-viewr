@@ -177,12 +177,13 @@ export default {
 
 ##### Attributes
 
-| 参数         | 说明                                       | 类型           | 可选值          | 默认值 |
-| :----------- | :----------------------------------------- | :------------- | :------------- | :----- |
-| urls         | 需要展示的图片url数组（必须参数）           | array&#60;string&#62; | —       | —      |
-| visible      | 是否显示组件（仅限于通过组件方式参数）      | boolean         | true / false  | —      |
-| initialIndex | 初始显示的图片索引（仅限于通过组件方式参数）| number          | —             | 0      |
-| index        | 显示的图片索引（仅限于通过js方法调用参数）  | number          | —             | 0      |
-| onSwitch     | 图片切换函数 Function (index)              | function        | —             | —      |
-| onClose      | 关闭函数（通过js方法调用，返回true才会关闭；组件方式可以直接设置visible为false） | function | — | — |
-| zIndex       | 层级                                      | number          | —             | 2000    |
+| 参数             | 说明                                       | 类型           | 可选值          | 默认值 |
+| :--------------- | :----------------------------------------- | :------------- | :------------- | :----- |
+| urls             | 需要展示的图片url数组（必须参数）           | array&#60;string&#62; | —       | —      |
+| visible          | 是否显示组件（仅限于通过组件方式参数）      | boolean         | true / false  | —      |
+| initialIndex     | 初始显示的图片索引（仅限于通过组件方式参数）| number          | —             | 0      |
+| index            | 显示的图片索引（仅限于通过js方法调用参数）  | number          | —             | 0      |
+| onSwitch         | 图片切换函数 Function (index)              | function        | —             | —      |
+| onClose          | 关闭函数（通过js方法调用，返回true才会关闭；组件方式可以直接设置visible为false） | function | — | — |
+| zIndex           | 层级                                      | number          | —             | 3000    |
+| closeOnClickMask | 点击蒙层关闭                              | boolean         | true / false   | true    |

@@ -1,6 +1,6 @@
 {
   "name": "vue-img-viewr",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "vue图片查看组件（vue image viewer component）",
   "author": "jekorx",
   "main": "lib/vue-img-viewr.js",
