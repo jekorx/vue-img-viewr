@@ -1,7 +1,7 @@
 {
   "name": "vue-img-viewr",
-  "version": "1.0.3",
-  "description": "vue图片查看组件（vue image viewer component）",
+  "version": "2.0.0",
+  "description": "vue图片查看组件（vue image viewer component），vue@3.x版",
   "author": "jekorx",
   "main": "lib/vue-img-viewr.js",
   "private": false,
@@ -51,6 +51,7 @@
   "homepage": "https://github.com/jekorx/vue-img-viewr#readme",
   "keywords": [
     "Vue",
+    "Vue3",
     "vue-img-viewr",
     "image",
     "viewer",
