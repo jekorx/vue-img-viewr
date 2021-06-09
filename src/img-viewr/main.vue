@@ -1,6 +1,6 @@
 <template>
   <transition name="img-viewr-fade">
-    <div v-show="visible" tabindex="-1" ref="img-viewr__wrapper" class="img-viewr__wrapper" :style="{ 'z-index': zIndex }">
+    <div v-show="visible" tabindex="-1" ref="imgViewrWrapper" class="img-viewr__wrapper" :style="`z-index: ${zIndex}`">
       <div class="img-viewr__mask" @click.self="handleMaskClick"></div>
       <!-- CLOSE -->
       <span class="img-viewr__btn img-viewr__close" @click="hide">
@@ -40,8 +40,8 @@
         <template v-for="(url, i) in urls">
           <img
             v-if="i === index"
-            ref="img"
             class="img-viewr__img"
+            ref="imageRef"
             :key="url"
             :src="currentImg"
             :style="imgStyle"
@@ -53,53 +53,46 @@
     </div>
   </transition>
 </template>
-<script>
-import Vue from 'vue'
+<script lang="ts">
+import { ref, reactive, watch, computed, nextTick, onMounted, onBeforeUnmount, defineComponent, PropType } from 'vue'
+
+type AnyFunction<T> = (...args: any[]) => T
+type EventHandlerFunction = (evt: Event) => void | {
+  handleEvent(evt: Event): void
+}
+type EventBindFunction = (
+  element: HTMLElement | Document | Window,
+  event: string,
+  handler: EventHandlerFunction,
+  useCapture?: boolean
+) => void
+type ImgViewrAction = 'zoomIn' | 'zoomOut' | 'clocelise' | 'anticlocelise' | 'download'
+type ModeTypes = ('CONTAIN' | 'ORIGINAL')[]
 
 // 是否为服务端渲染
-const isServer = Vue.prototype.$isServer
+const isServer = typeof window === 'undefined'
 
 // 事件绑定
-const on = (() => {
-  if (!isServer && document.addEventListener) {
-    return (element, event, handler) => {
-      if (element && event && handler) {
-        element.addEventListener(event, handler, false)
-      }
-    }
-  } else {
-    return (element, event, handler) => {
-      if (element && event && handler) {
-        element.attachEvent('on' + event, handler)
-      }
-    }
+const on: EventBindFunction = (element, event, handler, useCapture = false) => {
+  if (!isServer && element && event && handler) {
+    element.addEventListener(event, handler, useCapture)
   }
-})()
+}
 
 // 事件解绑
-const off = (() => {
-  if (!isServer && document.removeEventListener) {
-    return (element, event, handler) => {
-      if (element && event) {
-        element.removeEventListener(event, handler, false)
-      }
-    }
-  } else {
-    return (element, event, handler) => {
-      if (element && event) {
-        element.detachEvent('on' + event, handler)
-      }
-    }
+const off: EventBindFunction = (element, event, handler, useCapture = false) => {
+  if (!isServer && element && event && handler) {
+    element.removeEventListener(event, handler, useCapture)
   }
-})()
+}
 
 // 节流
-const rafThrottle = fn => {
+function rafThrottle<T extends AnyFunction<any>> (fn: T): AnyFunction<void> {
   let locked = false
-  return (...args) => {
+  return function (...args: any[]) {
     if (locked) return
     locked = true
-    window.requestAnimationFrame(_ => {
+    window.requestAnimationFrame(() => {
       fn.apply(this, args)
       locked = false
     })
@@ -107,9 +100,7 @@ const rafThrottle = fn => {
 }
 
 // 是否为火狐浏览器
-const isFirefox = () => {
-  return !Vue.prototype.$isServer && !!window.navigator.userAgent.match(/firefox/i)
-}
+const isFirefox = () => !isServer && !!window.navigator.userAgent.match(/firefox/i)
 
 // 图片模式，填充窗口、原始大小
 const Mode = {
@@ -126,239 +117,275 @@ const Mode = {
 // 鼠标滚动事件名称
 const mousewheelEventName = isFirefox() ? 'DOMMouseScroll' : 'mousewheel'
 
-export default {
-  name: 'ImgViewr',
-  computed: {
-    isSingle () {
-      return this.urls.length <= 1
-    },
-    isFirst () {
-      return this.index === 0
-    },
-    isLast () {
-      return this.index === this.urls.length - 1
-    },
-    currentImg () {
-      const image = this.urls[this.index]
-      return image || this.urls[0]
-    },
-    imgStyle () {
-      const { scale, deg, offsetX, offsetY, enableTransition } = this.transform
-      const style = {
-        transform: `scale(${scale}) rotate(${deg}deg)`,
-        transition: enableTransition ? 'transform .3s' : '',
-        'margin-left': `${offsetX}px`,
-        'margin-top': `${offsetY}px`
-      }
-      if (this.mode === Mode.CONTAIN) {
-        style.maxWidth = style.maxHeight = '100%'
-      }
-      return style
-    }
-  },
+// 下载图片
+const downloadImage = (src: string, filename: string, ext: string) => {
+  const img = new Image()
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  const link = document.createElement('a')
+  img.setAttribute('crossOrigin', 'anonymous') // 设置允许跨域访问
+  img.src = src
+  img.onerror = () => {
+    // 图片加载错误时（如存在跨域问题）直接通过浏览器打开
+    window.open(src)
+  }
+  img.onload = () => {
+    canvas.width = img.width
+    canvas.height = img.height
+    ctx?.drawImage(img, 0, 0, img.width, img.height)
+    link.setAttribute('href', canvas.toDataURL(`image/${ext}`))
+    link.setAttribute('target', '_blank')
+    link.setAttribute('download', `${filename}.${ext}`)
+    link.click()
+  }
+}
+
+const CLOSE_EVENT = 'close'
+const SWITCH_EVENT = 'switch'
+const EVENT_CODE = {
+  esc: 'Escape',
+  left: 'ArrowLeft', // 37
+  up: 'ArrowUp', // 38
+  right: 'ArrowRight', // 39
+  down: 'ArrowDown', // 40
+  space: 'Space'
+}
+
+export default defineComponent({
   props: {
     visible: {
       type: Boolean,
       default: false
     },
     urls: {
-      type: Array,
+      type: Array as PropType<string[]>,
       default: () => []
     },
     zIndex: {
       type: Number,
       default: 3000
     },
-    onSwitch: {
-      type: Function,
-      default: () => {}
-    },
-    onClose: {
-      type: Function,
-      default: () => {}
-    },
     initialIndex: {
       type: Number,
       default: 0
+    },
+    lockScroll: {
+      type: Boolean,
+      default: true
     },
     closeOnClickMask: {
       type: Boolean,
       default: true
     }
   },
-  data () {
-    return {
-      index: 0,
-      isShow: false,
-      infinite: true,
-      loading: false,
-      mode: Mode.CONTAIN,
-      transform: {
-        scale: 1,
-        deg: 0,
-        offsetX: 0,
-        offsetY: 0,
-        enableTransition: false
+  emits: [CLOSE_EVENT, SWITCH_EVENT],
+  setup (props, { emit }) {
+    const index = ref(0)
+    const infinite = ref(true)
+    const loading = ref(false)
+    const mode = reactive({ ...Mode.CONTAIN })
+    const transform = reactive({
+      scale: 1,
+      deg: 0,
+      offsetX: 0,
+      offsetY: 0,
+      enableTransition: false
+    })
+    const imgViewrWrapper = ref<null | HTMLElement>(null)
+    const imageRef = ref<null | HTMLImageElement>(null)
+
+    const isSingle = computed(() => props.urls.length <= 1)
+    const isFirst = computed(() => index.value === 0)
+    const isLast = computed(() => index.value === props.urls.length - 1)
+    const currentImg = computed(() => {
+      const image = props.urls[index.value]
+      return image || props.urls[0]
+    })
+    const imgStyle = computed(() => {
+      const { scale, deg, offsetX, offsetY, enableTransition } = transform
+      const style: {
+        [key: string]: string
+      } = {
+        transform: `scale(${scale}) rotate(${deg}deg)`,
+        transition: enableTransition ? 'transform .3s' : '',
+        'margin-left': `${offsetX}px`,
+        'margin-top': `${offsetY}px`
       }
-    }
-  },
-  watch: {
-    initialIndex (val) {
-      if (val !== this.index) {
-        this.index = val
+
+      if (mode.name === Mode.CONTAIN.name) {
+        style.maxWidth = style.maxHeight = '100%'
       }
-    },
-    index: {
-      handler (val) {
-        this.reset()
-        this.onSwitch(val)
+      return style
+    })
+
+    watch(() => props.initialIndex, val => {
+      if (val !== index.value) {
+        index.value = val
       }
-    },
-    currentImg (val) {
-      if (!val) return
-      this.$nextTick(_ => {
-        const $imgs = this.$refs.img
-        if ($imgs && $imgs.length > 0) {
-          const $img = $imgs[0]
+    })
+    watch(index, val => {
+      reset()
+      emit(SWITCH_EVENT, val)
+    })
+    watch(currentImg, () => {
+      nextTick(() => {
+        const $img = imageRef.value
+        if ($img) {
           if (!$img.complete) {
-            this.loading = true
+            loading.value = true
           }
+        } else {
+          loading.value = true
         }
       })
-    }
-  },
-  mounted () {
-    this.deviceSupportInstall()
-    // 鼠标聚焦到wrapper，防止键盘滚动浏览器滚动条
-    this.$refs['img-viewr__wrapper'].focus()
-  },
-  beforeDestroy () {
-    this.deviceSupportUninstall()
-  },
-  methods: {
-    handleMaskClick () {
-      if (this.closeOnClickMask) {
-        this.hide()
+    })
+    watch(() => props.visible, val => {
+      if (!props.lockScroll) return
+
+      let clazz = document.body.className
+      if (val) {
+        if (!clazz.includes('img-viewr__body-lock')) {
+          clazz += ' img-viewr__body-lock'
+        }
+      } else {
+        clazz = clazz.replace('img-viewr__body-lock', '')
       }
-    },
-    hide () {
-      this.onClose()
-    },
-    deviceSupportInstall () {
-      this._keyDownHandler = rafThrottle(e => {
-        const keyCode = e.keyCode
-        switch (keyCode) {
+      document.body.className = clazz.trim()
+    })
+
+    const handleMaskClick = () => {
+      if (props.closeOnClickMask) {
+        hide()
+      }
+    }
+    const hide = () => {
+      emit(CLOSE_EVENT)
+    }
+    let _keyDownHandler: EventHandlerFunction | null
+    let _mouseWheelHandler: EventHandlerFunction | null
+    let _dragHandler: EventHandlerFunction | null
+    const deviceSupportInstall = () => {
+      _keyDownHandler = rafThrottle(e => {
+        switch (e.code) {
           // ESC
-          case 27:
-            this.hide()
+          case EVENT_CODE.esc:
+            hide()
             break
           // SPACE
-          case 32:
-            this.toggleMode()
+          case EVENT_CODE.space:
+            toggleMode()
             break
           // LEFT_ARROW
-          case 37:
-            this.prev()
+          case EVENT_CODE.left:
+            prev()
             break
           // UP_ARROW
-          case 38:
-            this.handleActions('zoomIn')
+          case EVENT_CODE.up:
+            handleActions('zoomIn')
             break
           // RIGHT_ARROW
-          case 39:
-            this.next()
+          case EVENT_CODE.right:
+            next()
             break
           // DOWN_ARROW
-          case 40:
-            this.handleActions('zoomOut')
+          case EVENT_CODE.down:
+            handleActions('zoomOut')
             break
         }
       })
-      this._mouseWheelHandler = rafThrottle(e => {
+      _mouseWheelHandler = rafThrottle(e => {
         const delta = e.wheelDelta ? e.wheelDelta : -e.detail
         if (delta > 0) {
-          this.handleActions('zoomIn', {
+          handleActions('zoomIn', {
             zoomRate: 0.05,
             enableTransition: false
           })
         } else {
-          this.handleActions('zoomOut', {
+          handleActions('zoomOut', {
             zoomRate: 0.05,
             enableTransition: false
           })
         }
       })
-      on(document, 'keydown', this._keyDownHandler)
-      on(document, mousewheelEventName, this._mouseWheelHandler)
-    },
-    deviceSupportUninstall () {
-      off(document, 'keydown', this._keyDownHandler)
-      off(document, mousewheelEventName, this._mouseWheelHandler)
-      this._keyDownHandler = null
-      this._mouseWheelHandler = null
-    },
-    handleImgLoad (e) {
-      this.loading = false
-    },
-    handleImgError (e) {
-      this.loading = false
-      e.target.alt = '加载失败'
-    },
-    handleMouseDown (e) {
-      if (this.loading || e.button !== 0) return
+      on(document, 'keydown', _keyDownHandler)
+      on(document, mousewheelEventName, _mouseWheelHandler)
+    }
+    const deviceSupportUninstall = () => {
+      if (_keyDownHandler) {
+        off(document, 'keydown', _keyDownHandler)
+      }
+      if (_mouseWheelHandler) {
+        off(document, mousewheelEventName, _mouseWheelHandler)
+      }
+      _keyDownHandler = null
+      _mouseWheelHandler = null
+    }
+    const handleImgLoad = () => {
+      loading.value = false
+    }
+    const handleImgError = () => {
+      loading.value = false
+      const $img = imageRef.value
+      if ($img) {
+        $img.alt = '加载失败'
+      }
+    }
+    const handleMouseDown: (e: MouseEvent) => void = e => {
+      if (loading.value || e.button !== 0) return
 
-      const { offsetX, offsetY } = this.transform
+      const { offsetX, offsetY } = transform
       const startX = e.pageX
       const startY = e.pageY
-      this._dragHandler = rafThrottle(ev => {
-        this.transform.offsetX = offsetX + ev.pageX - startX
-        this.transform.offsetY = offsetY + ev.pageY - startY
+      _dragHandler = rafThrottle(ev => {
+        transform.offsetX = offsetX + ev.pageX - startX
+        transform.offsetY = offsetY + ev.pageY - startY
       })
-      on(document, 'mousemove', this._dragHandler)
-      on(document, 'mouseup', ev => {
-        off(document, 'mousemove', this._dragHandler)
+      on(document, 'mousemove', _dragHandler)
+      on(document, 'mouseup', () => {
+        if (_dragHandler) {
+          off(document, 'mousemove', _dragHandler)
+        }
       })
 
       e.preventDefault()
-    },
-    reset () {
-      this.transform = {
-        scale: 1,
-        deg: 0,
-        offsetX: 0,
-        offsetY: 0,
-        enableTransition: false
-      }
-    },
-    toggleMode () {
-      if (this.loading) return
+    }
+    const reset = () => {
+      transform.scale = 1
+      transform.deg = 0
+      transform.offsetX = 0
+      transform.offsetY = 0
+      transform.enableTransition = false
+    }
+    const toggleMode = () => {
+      if (loading.value) return
 
-      const modeNames = Object.keys(Mode)
+      const modeNames = Object.keys(Mode) as ModeTypes
       const modeValues = Object.values(Mode)
-      const index = modeValues.indexOf(this.mode)
+      const index = modeValues.findIndex(({ name }) => name === mode.name)
       const nextIndex = (index + 1) % modeNames.length
-      this.mode = Mode[modeNames[nextIndex]]
-      this.reset()
-    },
-    prev () {
-      if (this.isFirst && !this.infinite) return
-      const len = this.urls.length
-      this.index = (this.index - 1 + len) % len
-    },
-    next () {
-      if (this.isLast && !this.infinite) return
-      const len = this.urls.length
-      this.index = (this.index + 1) % len
-    },
-    handleActions (action, options = {}) {
-      if (this.loading) return
+      const { name, icon } = Mode[modeNames[nextIndex]]
+      mode.name = name
+      mode.icon = icon
+      reset()
+    }
+    const prev = () => {
+      if (isFirst.value && !infinite.value) return
+      const len = props.urls.length
+      index.value = (index.value - 1 + len) % len
+    }
+    const next = () => {
+      if (isLast.value && !infinite.value) return
+      const len = props.urls.length
+      index.value = (index.value + 1) % len
+    }
+    const handleActions = (action: ImgViewrAction, options = {}) => {
+      if (loading.value) return
       const { zoomRate, rotateDeg, enableTransition } = {
         zoomRate: 0.2,
         rotateDeg: 90,
         enableTransition: true,
         ...options
       }
-      const { transform } = this
       switch (action) {
         case 'zoomOut':
           if (transform.scale > 0.2) {
@@ -375,32 +402,42 @@ export default {
           transform.deg -= rotateDeg
           break
         case 'download':
-          this.downloadImg(this.currentImg, Date.now(), 'png')
+          downloadImage(currentImg.value, Date.now().toString(), 'png')
           break
       }
       transform.enableTransition = enableTransition
-    },
-    downloadImg (src, filename, ext) {
-      const img = new Image()
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      const link = document.createElement('a')
-      img.setAttribute('crossOrigin', 'anonymous') // 设置允许跨域访问
-      img.src = src
-      img.onerror = () => {
-        // 图片加载错误时（如存在跨域问题）直接通过浏览器打开
-        window.open(src)
-      }
-      img.onload = () => {
-        canvas.width = img.width
-        canvas.height = img.height
-        ctx.drawImage(img, 0, 0, img.width, img.height)
-        link.setAttribute('href', canvas.toDataURL('image/' + ext))
-        link.setAttribute('target', '_blank')
-        link.setAttribute('download', filename + '.' + ext)
-        link.click()
-      }
+    }
+
+    onMounted(() => {
+      deviceSupportInstall()
+      imgViewrWrapper?.value?.focus()
+    })
+
+    onBeforeUnmount(() => {
+      deviceSupportUninstall()
+    })
+
+    return {
+      imgViewrWrapper,
+      imageRef,
+      index,
+      isSingle,
+      infinite,
+      isFirst,
+      isLast,
+      mode,
+      currentImg,
+      imgStyle,
+      hide,
+      prev,
+      next,
+      toggleMode,
+      handleActions,
+      handleMaskClick,
+      handleImgLoad,
+      handleImgError,
+      handleMouseDown
     }
   }
-}
+})
 </script>
