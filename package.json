@@ -4,7 +4,9 @@
   "description": "vue图片查看组件（vue image viewer component），with vue@3.x",
   "author": "jekorx",
   "files": [
-    "lib"
+    "lib",
+    "styles",
+    "types"
   ],
   "main": "./lib/vue-img-viewr.umd.js",
   "module": "./lib/vue-img-viewr.es.js",
@@ -14,10 +16,12 @@
       "require": "./lib/vue-img-viewr.umd.js"
     }
   },
+  "typings": "./types/index.d.ts",
   "private": false,
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && eslint src --ext .ts,.js,.tsx,.jsx,.vue && vite build",
+    "build:show": "vue-tsc --noEmit && eslint src --ext .ts,.js,.tsx,.jsx,.vue && vite build -c vite.config.show.ts",
     "serve": "vite preview"
   },
   "peerDependencies": {

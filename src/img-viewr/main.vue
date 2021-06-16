@@ -1,6 +1,6 @@
 <template>
   <transition name="img-viewr-fade">
-    <div v-show="visible" tabindex="-1" ref="imgViewrWrapper" class="img-viewr__wrapper" :style="`z-index: ${zIndex}`">
+    <div v-show="isShow" tabindex="-1" ref="imgViewrWrapper" class="img-viewr__wrapper" :style="`z-index: ${zIndexNum}`">
       <div class="img-viewr__mask" @click.self="handleMaskClick"></div>
       <!-- CLOSE -->
       <span class="img-viewr__btn img-viewr__close" @click="hide">
@@ -37,12 +37,12 @@
       </div>
       <!-- CANVAS -->
       <div class="img-viewr__canvas">
-        <template v-for="(url, i) in urls">
+        <template v-for="(img, i) in images">
           <img
             v-if="i === index"
             class="img-viewr__img"
             ref="imageRef"
-            :key="url"
+            :key="img"
             :src="currentImg"
             :style="imgStyle"
             @load="handleImgLoad"
@@ -54,8 +54,9 @@
   </transition>
 </template>
 <script lang="ts">
-import { ref, reactive, watch, computed, nextTick, onMounted, onBeforeUnmount, defineComponent, PropType } from 'vue'
+import { ref, reactive, watch, computed, nextTick, onMounted, onBeforeUnmount, defineComponent, PropType, watchEffect } from 'vue'
 
+// types
 type AnyFunction<T> = (...args: any[]) => T
 type EventHandlerFunction = (evt: Event) => void | {
   handleEvent(evt: Event): void
@@ -89,7 +90,7 @@ const off: EventBindFunction = (element, event, handler, useCapture = false) => 
 // 节流
 function rafThrottle<T extends AnyFunction<any>> (fn: T): AnyFunction<void> {
   let locked = false
-  return function (...args: any[]) {
+  return function (this: any, ...args: any[]) { // this为any的时候报错，需指定this为any或unknown
     if (locked) return
     locked = true
     window.requestAnimationFrame(() => {
@@ -180,6 +181,16 @@ export default defineComponent({
   },
   emits: [CLOSE_EVENT, SWITCH_EVENT],
   setup (props, { emit }) {
+    // 为同时兼容vue组件方式和js方式调用的变量
+    const initIndex = ref(0)
+    const zIndexNum = ref(3000)
+    const isLockScroll = ref(true)
+    const isCloseOnClickMask = ref(true)
+    const isShow = ref(false)
+    const images = ref<string[]>([])
+    const closeHandle = ref<null | Function>(null)
+    const switchHandle = ref<null | Function>(null)
+
     const index = ref(0)
     const infinite = ref(true)
     const loading = ref(false)
@@ -194,12 +205,12 @@ export default defineComponent({
     const imgViewrWrapper = ref<null | HTMLElement>(null)
     const imageRef = ref<null | HTMLImageElement>(null)
 
-    const isSingle = computed(() => props.urls.length <= 1)
+    const isSingle = computed(() => images.value.length <= 1)
     const isFirst = computed(() => index.value === 0)
-    const isLast = computed(() => index.value === props.urls.length - 1)
+    const isLast = computed(() => index.value === images.value.length - 1)
     const currentImg = computed(() => {
-      const image = props.urls[index.value]
-      return image || props.urls[0]
+      const image = images.value[index.value]
+      return image || images.value[0]
     })
     const imgStyle = computed(() => {
       const { scale, deg, offsetX, offsetY, enableTransition } = transform
@@ -218,13 +229,40 @@ export default defineComponent({
       return style
     })
 
-    watch(() => props.initialIndex, val => {
+    watchEffect(() => {
+      if (props.urls.length) {
+        images.value = props.urls
+        initIndex.value = props.initialIndex
+        zIndexNum.value = props.zIndex
+        isLockScroll.value = props.lockScroll
+        isCloseOnClickMask.value = props.closeOnClickMask
+      }
+    })
+
+    watch(() => props.visible, val => {
+      isShow.value = val
+    })
+    watch(initIndex, val => {
       if (val !== index.value) {
         index.value = val
       }
     })
+    watch(isShow, val => {
+      if (!isLockScroll.value) return
+
+      let clazz = document.body.className
+      if (val) {
+        if (!clazz.includes('img-viewr__body-lock')) {
+          clazz += ' img-viewr__body-lock'
+        }
+      } else {
+        clazz = clazz.replace('img-viewr__body-lock', '')
+      }
+      document.body.className = clazz.trim()
+    })
     watch(index, val => {
       reset()
+      switchHandle.value?.(val)
       emit(SWITCH_EVENT, val)
     })
     watch(currentImg, () => {
@@ -239,26 +277,14 @@ export default defineComponent({
         }
       })
     })
-    watch(() => props.visible, val => {
-      if (!props.lockScroll) return
-
-      let clazz = document.body.className
-      if (val) {
-        if (!clazz.includes('img-viewr__body-lock')) {
-          clazz += ' img-viewr__body-lock'
-        }
-      } else {
-        clazz = clazz.replace('img-viewr__body-lock', '')
-      }
-      document.body.className = clazz.trim()
-    })
 
     const handleMaskClick = () => {
-      if (props.closeOnClickMask) {
+      if (isCloseOnClickMask.value) {
         hide()
       }
     }
     const hide = () => {
+      closeHandle.value?.()
       emit(CLOSE_EVENT)
     }
     let _keyDownHandler: EventHandlerFunction | null
@@ -370,12 +396,12 @@ export default defineComponent({
     }
     const prev = () => {
       if (isFirst.value && !infinite.value) return
-      const len = props.urls.length
+      const len = images.value.length
       index.value = (index.value - 1 + len) % len
     }
     const next = () => {
       if (isLast.value && !infinite.value) return
-      const len = props.urls.length
+      const len = images.value.length
       index.value = (index.value + 1) % len
     }
     const handleActions = (action: ImgViewrAction, options = {}) => {
@@ -410,7 +436,7 @@ export default defineComponent({
 
     onMounted(() => {
       deviceSupportInstall()
-      imgViewrWrapper?.value?.focus()
+      imgViewrWrapper?.value?.focus?.()
     })
 
     onBeforeUnmount(() => {
@@ -418,6 +444,12 @@ export default defineComponent({
     })
 
     return {
+      images,
+      isShow,
+      initIndex,
+      zIndexNum,
+      isLockScroll,
+      isCloseOnClickMask,
       imgViewrWrapper,
       imageRef,
       index,
@@ -428,6 +460,8 @@ export default defineComponent({
       mode,
       currentImg,
       imgStyle,
+      closeHandle,
+      switchHandle,
       hide,
       prev,
       next,

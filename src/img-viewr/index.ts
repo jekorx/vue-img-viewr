@@ -1,5 +1,4 @@
-import { createVNode, render, VNode, App } from 'vue'
-import Wrap from './wrap.vue'
+import { createVNode, render, VNode, ComponentPublicInstance } from 'vue'
 import ImgViewr from './main.vue'
 
 // 是否为服务端渲染
@@ -10,7 +9,7 @@ let instance: VNode
 const initInstance = () => {
   const container = document.createElement('div')
 
-  const vm = createVNode(Wrap, {})
+  const vm = createVNode(ImgViewr, {})
 
   if (vm && vm.props) {
     vm.props.onDestroy = () => {
@@ -28,12 +27,13 @@ const initInstance = () => {
 }
 
 const showImages: (options: {
-  visible?: Boolean,
   urls: string[],
+  index?: number,
   zIndex?: number,
-  initialIndex?: number,
   lockScroll?: boolean
-  closeOnClickMask?: boolean
+  closeOnClickMask?: boolean,
+  onClose?: Function,
+  onSwitch?: Function
 }) => void = options => {
   if (isServer) return
 
@@ -41,32 +41,45 @@ const showImages: (options: {
     throw new Error('At least one picture in urls array!')
   }
 
+  // single instance
   if (!instance) {
     initInstance()
   }
 
-  for (const k in options) {
-    instance.component.proxy.options[k] = options[k]
+  const component = (instance?.component?.proxy as ComponentPublicInstance<{
+    images: string[],
+    isShow: boolean,
+    initIndex: number,
+    zIndexNum?: number,
+    isLockScroll?: boolean,
+    isCloseOnClickMask?: boolean,
+    closeHandle?: Function,
+    switchHandle?: (index: number) => void
+  }>)
+
+  // initial parameters
+  component.images = options.urls
+  component.initIndex = options.index ?? 0
+  component.zIndexNum = options.zIndex ?? 3000
+  component.isLockScroll = options.lockScroll ?? true
+  component.isCloseOnClickMask = options.closeOnClickMask ?? true
+  component.closeHandle = () => {
+    component.isShow = false
+    options.onClose?.()
+  }
+  component.switchHandle = index => {
+    options.onSwitch?.(index)
   }
 
-  instance.component.proxy.options.visible = true
-}
-
-export type WithInstall<T> = T & {
-  install(app: App): void
-}
-
-// using any here because tsc will generate some weird results when using generics
-export function withInstall<T> (options: any): WithInstall<T> {
-  (options as Record<string, unknown>).install = (app: App) => {
-    const { name } = options as any
-    app.component(name, options)
-  }
-
-  return options
+  // show the modal
+  setTimeout(() => {
+    component.isShow = true
+  }, 0)
 }
 
 export {
   showImages,
   ImgViewr
 }
+
+export default ImgViewr

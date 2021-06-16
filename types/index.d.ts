@@ -1,10 +1,13 @@
+declare module 'vue-img-viewr'
+
 export declare type ImgViewrOptions = {
-  visible?: Boolean,
   urls: string[],
+  index?: number,
   zIndex?: number,
-  initialIndex?: number,
   lockScroll?: boolean
-  closeOnClickMask?: boolean
+  closeOnClickMask?: boolean,
+  onClose?: Function,
+  onSwitch?: Function
 }
 
 export declare function showImages(options: ImgViewrOptions): void
