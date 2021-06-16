@@ -1,8 +1,12 @@
 # vue-img-viewr
 
-[![npm package](https://img.shields.io/npm/v/vue-img-viewr.svg)](https://www.npmjs.com/package/vue-img-viewr)
+[![npm package](https://img.shields.io/badge/npm-v1.0.4-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.4)
 
-> vue图片查看组件（vue image viewer component）  
+> ❗ vue图片查看组件（vue image viewer component），```1.x```版本为```vue@2.x```组件  
+
+> ❗ 如需在```vue@3.x```中使用，请使用 [![vue-img-viewr@1.0.4](https://img.shields.io/badge/npm%20vue--img--viewr-v2.x-blue)](https://www.npmjs.com/package/vue-img-viewr)， Github v1.x地址 [![github 1.x](https://img.shields.io/badge/github%20vue--img--viewr-v2.x-green)](https://github.com/jekorx/vue-img-viewr)  
+> ```yarn add vue-img-viewr@^2.0.1```  
+> ```npm i vue-img-viewr@^2.0.1 -S```  
 
 ### 示例
 
@@ -14,9 +18,9 @@
 
 ```bash
 # 安装依赖
-yarn add vue-img-viewr
+yarn add vue-img-viewr@^1.0.4
 # or
-npm i vue-img-viewr -S
+npm i vue-img-viewr@^1.0.4 -S
 ```
 
 > 使用，SPA，非SSR  
@@ -186,4 +190,5 @@ export default {
 | onSwitch         | 图片切换函数 Function (index)              | function        | —             | —      |
 | onClose          | 关闭函数（通过js方法调用，返回true才会关闭；组件方式可以直接设置visible为false） | function | — | — |
 | zIndex           | 层级                                      | number          | —             | 3000    |
+| lockScroll       | 是否在查看图片时将 body 滚动锁定           | boolean         | true / false   | true    |
 | closeOnClickMask | 点击蒙层关闭                              | boolean         | true / false   | true    |

@@ -1,3 +1,6 @@
+.img-viewr__body-lock {
+  overflow: hidden;
+}
 .img-viewr__wrapper {
   position: fixed;
   top: 0;

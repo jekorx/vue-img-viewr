@@ -181,6 +181,10 @@ export default {
       type: Number,
       default: 0
     },
+    lockScroll: {
+      type: Boolean,
+      default: true
+    },
     closeOnClickMask: {
       type: Boolean,
       default: true
@@ -189,7 +193,6 @@ export default {
   data () {
     return {
       index: 0,
-      isShow: false,
       infinite: true,
       loading: false,
       mode: Mode.CONTAIN,
@@ -225,6 +228,18 @@ export default {
           }
         }
       })
+    },
+    visible (val) {
+      if (!this.lockScroll) return
+      let clazz = document.body.className
+      if (val) {
+        if (!clazz.includes('img-viewr__body-lock')) {
+          clazz += ' img-viewr__body-lock'
+        }
+      } else {
+        clazz = clazz.replace('img-viewr__body-lock', '')
+      }
+      document.body.className = clazz.trim()
     }
   },
   mounted () {
