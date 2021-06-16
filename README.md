@@ -119,56 +119,8 @@ export default {
 > 服务端渲染（SSR）中使用，以Nuxtjs为例  
 
 ```javascript
-/**
- * 引用
- */
-// @/plugins/vue-img-viewr.js
-import Vue from 'vue'
-import ImgViewr, { showImages } from 'vue-img-viewr'
-import 'vue-img-viewr/styles/index.css'
-
-export default () => {
-  // 全局方法
-  Vue.prototype.$showImages = showImages
-  // 注册组件
-  Vue.component(ImgViewr.name, ImgViewr)
-}
-
-// nuxt.config.js
-plugins: [
-  { src: '@/plugins/vue-img-viewr', ssr: false }
-]
-
-/**
- * 使用
- */
-export default {
-  data () {
-    return {
-      urls: [
-        'https://s.gravatar.com/avatar/221f86a573320174bad7a62886a6d4b4?size=100&default=retro',
-        'https://s.gravatar.com/avatar/221f86a573320174bad7a62886a6d4b4',
-        'https://static.npmjs.com/attachments/ck3uwf5d872zb8874c3ayi1pj-icon-pro-wombat-3x.png'
-      ],
-      index: 0,
-      visible: false
-    }
-  },
-  methods: {
-    // 通过组件方式
-    showImagesByComponent (index) {
-      this.visible = true
-      this.index = index
-    },
-    showImagesByJs (index) {
-      // 通过js方式显示
-      this.$showImages({
-        urls: this.urls,
-        index
-      })
-    }
-  }
-}
+// TODO
+// 后期测试后再进行补充
 ```
 
 > 示例组件使用
