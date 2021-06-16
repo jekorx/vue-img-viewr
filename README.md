@@ -2,15 +2,15 @@
 
 [![npm package](https://img.shields.io/npm/v/vue-img-viewr.svg)](https://www.npmjs.com/package/vue-img-viewr)
 
-> ❗ vue图片查看组件（vue image viewer component），```2.x```版本为**vue@3.x**组件  
+> ❗ vue图片查看组件（vue image viewer component），```2.x```版本为```vue@3.x```组件  
 
-> ❗ 如需在**vue@2.x**中使用，请使用 [vue-img-viewr@1.0.3](https://www.npmjs.com/package/vue-img-viewr/v/1.0.3)， Github v1.x地址 [请点击](https://github.com/jekorx/vue-img-viewr/tree/1.x)  
-> ```yarn add vue-img-viewr@^1.0.3```
+> ❗ 如需在```vue@2.x```中使用，请使用 [vue-img-viewr@1.0.3](https://www.npmjs.com/package/vue-img-viewr/v/1.0.3)， Github v1.x地址 [请点击](https://github.com/jekorx/vue-img-viewr/tree/1.x)  
+> ```yarn add vue-img-viewr@^1.0.3```  
 > ```npm i vue-img-viewr@^1.0.3 -S```  
 
 ### 示例
 
-> [demo展示](https://jekorx.github.io/vue-img-viewr)  
+> [demo展示](https://jekorx.github.io/vue-img-viewr/)  
 
 ![vue-img-viewr](screenshot/pic0.png)
 
