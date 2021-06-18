@@ -69,6 +69,14 @@ type EventBindFunction = (
 ) => void
 type ImgViewrAction = 'zoomIn' | 'zoomOut' | 'clocelise' | 'anticlocelise' | 'download'
 type ModeTypes = ('CONTAIN' | 'ORIGINAL')[]
+interface ImgViewr {
+  visible: boolean
+  urls: string[]
+  zIndex: number
+  initialIndex: number
+  lockScroll: boolean
+  closeOnClickMask: boolean
+}
 
 // 是否为服务端渲染
 const isServer = typeof window === 'undefined'
@@ -153,6 +161,7 @@ const EVENT_CODE = {
 }
 
 export default defineComponent({
+  name: 'ImgViewr',
   props: {
     visible: {
       type: Boolean,
@@ -180,7 +189,7 @@ export default defineComponent({
     }
   },
   emits: [CLOSE_EVENT, SWITCH_EVENT],
-  setup (props, { emit }) {
+  setup (props: ImgViewr, { emit }) {
     // 为同时兼容vue组件方式和js方式调用的变量
     const initIndex = ref(0)
     const zIndexNum = ref(3000)
