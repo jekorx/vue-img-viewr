@@ -1,4 +1,4 @@
-import { createVNode, render, VNode, ComponentPublicInstance } from 'vue'
+import { createVNode, render, VNode, ComponentPublicInstance, App } from 'vue'
 import ImgViewr from './main.vue'
 
 // 是否为服务端渲染
@@ -75,6 +75,11 @@ const showImages: (options: {
   setTimeout(() => {
     component.isShow = true
   }, 0)
+}
+
+ImgViewr.install = (app: App): void => {
+  app.config.globalProperties.$showImages = showImages
+  app.component(ImgViewr.name, ImgViewr)
 }
 
 export {

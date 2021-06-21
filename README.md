@@ -59,7 +59,12 @@ import ImgViewr from 'vue-img-viewr'
 import 'vue-img-viewr/styles/index.css'
 
 const app = createApp(App)
-app.component('ImgViewr', ImgViewr)
+
+// 等同于
+// app.component('ImgViewr', ImgViewr)
+// app.config.globalProperties.$showImages = showImages
+app.use(ImgViewr)
+
 app.mount('#app')
 
 /**

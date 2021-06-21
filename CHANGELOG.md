@@ -1,5 +1,10 @@
 # 更新日志
 
+#### 2.0.3 (2021-06-21)
+
+* add install function with plugin
+* add install type of typescript
+
 #### 2.0.3 (2021-06-18)
 
 * add props types

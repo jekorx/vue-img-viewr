@@ -1,3 +1,5 @@
+import { App } from 'vue'
+
 declare module 'vue-img-viewr'
 
 export declare type ImgViewrOptions = {
@@ -12,4 +14,8 @@ export declare type ImgViewrOptions = {
 
 export declare function showImages(options: ImgViewrOptions): void
 
-export { }
+declare const _default: {
+  install: (app: App, ...options: any[]) => any
+}
+
+export default _default
