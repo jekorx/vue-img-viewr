@@ -1,6 +1,11 @@
 # 更新日志
 
-#### 2.0.3 (2021-06-21)
+#### 2.0.5 (2021-06-22)
+
+* add ImgViewr.showImages(...) method
+* index.d.ts
+
+#### 2.0.4 (2021-06-21)
 
 * add install function with plugin
 * add install type of typescript

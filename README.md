@@ -92,6 +92,8 @@ export default {
       index.value = i
     }
     const showImagesByJs: (i: number) => void = i => {
+      // or
+      // ImgViewr.showImages({ ... })
       showImages({
         urls: images,
         index: i,

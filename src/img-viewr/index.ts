@@ -77,6 +77,8 @@ const showImages: (options: {
   }, 0)
 }
 
+ImgViewr.showImages = showImages
+
 ImgViewr.install = (app: App): void => {
   app.config.globalProperties.$showImages = showImages
   app.component(ImgViewr.name, ImgViewr)

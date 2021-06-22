@@ -12,10 +12,11 @@ export declare type ImgViewrOptions = {
   onSwitch?: Function
 }
 
-export declare function showImages(options: ImgViewrOptions): void
+export declare const showImages: (options: ImgViewrOptions) => void
 
 declare const _default: {
-  install: (app: App, ...options: any[]) => any
+  showImages: (options: ImgViewrOptions) => void
+  install: (app: App) => any
 }
 
 export default _default
