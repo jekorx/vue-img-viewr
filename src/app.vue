@@ -16,7 +16,7 @@
   </div>
 </template>
 <script lang="ts">
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import /* ImgViewr,  */{ showImages } from './img-viewr/index'
 import '../styles/index.css'
 
@@ -25,7 +25,7 @@ const images = [
   'https://s.gravatar.com/avatar/221f86a573320174bad7a62886a6d4b4',
   'https://static.npmjs.com/attachments/ck3uwf5d872zb8874c3ayi1pj-icon-pro-wombat-3x.png'
 ]
-export default {
+export default defineComponent({
   name: 'App',
   // components: { ImgViewr },
   setup () {
@@ -63,7 +63,7 @@ export default {
       changeHandle
     }
   }
-}
+})
 </script>
 <style scoped>
 .imgs {
