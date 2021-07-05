@@ -259,15 +259,16 @@ export default defineComponent({
     watch(isShow, val => {
       if (!isLockScroll.value) return
 
-      let clazz = document.body.className
+      const clazz = document.body.classList
       if (val) {
-        if (!clazz.includes('img-viewr__body-lock')) {
-          clazz += ' img-viewr__body-lock'
+        if (!clazz.contains('img-viewr__body-lock')) {
+          clazz.add('img-viewr__body-lock')
         }
       } else {
-        clazz = clazz.replace('img-viewr__body-lock', '')
+        if (clazz.contains('img-viewr__body-lock')) {
+          clazz.remove('img-viewr__body-lock')
+        }
       }
-      document.body.className = clazz.trim()
     })
     watch(index, val => {
       reset()

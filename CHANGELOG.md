@@ -1,5 +1,9 @@
 # 更新日志
 
+#### 2.0.6 (2021-06-22)
+
+* body lock use classList
+
 #### 2.0.5 (2021-06-22)
 
 * add ImgViewr.showImages(...) method
