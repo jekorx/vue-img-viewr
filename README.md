@@ -30,7 +30,7 @@ npm i vue-img-viewr@^1.0.4 -S
  * 一、推荐🔥全局js方式引入
  */
 import Vue from 'vue'
-import { showImages } from '../img-viewr'
+import { showImages } from 'vue-img-viewr'
 import 'vue-img-viewr/styles/index.css'
 
 Vue.prototype.$showImages = showImages
