@@ -261,6 +261,7 @@ export default defineComponent({
 
       const clazz = document.body.classList
       if (val) {
+        reset()
         if (!clazz.contains('img-viewr__body-lock')) {
           clazz.add('img-viewr__body-lock')
         }
