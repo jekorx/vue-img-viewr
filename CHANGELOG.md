@@ -1,5 +1,11 @@
 # 更新日志
 
+#### 1.0.5 (2021-07-27)
+
+* Reset transform when modal is visible
+* body lock use classList
+* README
+
 #### 1.0.4 (2021-06-16)
 
 * 增加查看图片时将body滚动锁定的配置lockScroll（默认：true）

@@ -1,10 +1,10 @@
 # vue-img-viewr
 
-[![npm package](https://img.shields.io/badge/npm-v1.0.4-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.4)
+[![npm package](https://img.shields.io/badge/npm-v1.0.5-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.4)
 
 > ❗ vue图片查看组件（vue image viewer component），```1.x```版本为```vue@2.x```组件  
 
-> ❗ 如需在```vue@3.x```中使用，请使用 [![vue-img-viewr@1.0.4](https://img.shields.io/badge/npm%20vue--img--viewr-v2.x-blue)](https://www.npmjs.com/package/vue-img-viewr)， Github v1.x地址 [![github 1.x](https://img.shields.io/badge/github%20vue--img--viewr-v2.x-green)](https://github.com/jekorx/vue-img-viewr)  
+> ❗ 如需在```vue@3.x```中使用，请使用 [![vue-img-viewr@2.x](https://img.shields.io/badge/npm%20vue--img--viewr-v2.x-blue)](https://www.npmjs.com/package/vue-img-viewr)， Github v2.x地址 [![github 2.x](https://img.shields.io/badge/github%20vue--img--viewr-v2.x-green)](https://github.com/jekorx/vue-img-viewr)  
 > ```yarn add vue-img-viewr@^2.0.1```  
 > ```npm i vue-img-viewr@^2.0.1 -S```  
 
@@ -18,9 +18,9 @@
 
 ```bash
 # 安装依赖
-yarn add vue-img-viewr@^1.0.4
+yarn add vue-img-viewr@^1.0.5
 # or
-npm i vue-img-viewr@^1.0.4 -S
+npm i vue-img-viewr@^1.0.5 -S
 ```
 
 > 使用，SPA，非SSR  
