@@ -1,6 +1,6 @@
 # 更新日志
 
-#### 2.0.6 (2021-07-27)
+#### 2.0.7 (2021-07-27)
 
 * Reset transform when modal is visible
 
