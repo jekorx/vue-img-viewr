@@ -9,7 +9,8 @@ export declare type ImgViewrOptions = {
   lockScroll?: boolean
   closeOnClickMask?: boolean,
   onClose?: Function,
-  onSwitch?: Function
+  onSwitch?: Function,
+  onShow?: Function
 }
 
 export declare const showImages: (options: ImgViewrOptions) => void

@@ -33,7 +33,8 @@ const showImages: (options: {
   lockScroll?: boolean
   closeOnClickMask?: boolean,
   onClose?: Function,
-  onSwitch?: Function
+  onSwitch?: Function,
+  onShow?: Function
 }) => void = options => {
   if (isServer) return
 
@@ -54,7 +55,8 @@ const showImages: (options: {
     isLockScroll?: boolean,
     isCloseOnClickMask?: boolean,
     closeHandle?: Function,
-    switchHandle?: (index: number) => void
+    switchHandle?: (index: number) => void,
+    showHandle?: (isShow: boolean) => void
   }>)
 
   // initial parameters
@@ -69,6 +71,9 @@ const showImages: (options: {
   }
   component.switchHandle = index => {
     options.onSwitch?.(index)
+  }
+  component.showHandle = isShow => {
+    options.onShow?.(isShow)
   }
 
   // show the modal

@@ -6,7 +6,7 @@
         <img :src="url" />
       </div>
     </div>
-    <ImgViewr :visible="visible" :urls="urls" :initial-index="index" @close="closeHandle" @switch="changeHandle" />
+    <ImgViewr :visible="visible" :urls="urls" :initial-index="index" @close="closeHandle" @switch="changeHandle" @show="showHandle" />
     <h3>通过js方法调用</h3>
     <div class="imgs">
       <div v-for="(url, i) in urls" class="img" :key="i" @click="() => showImagesByJs(i)">
@@ -43,11 +43,15 @@ export default defineComponent({
         onSwitch: changeHandle,
         onClose: () => {
           console.log('close with js')
-        }
+        },
+        onShow: showHandle
       })
     }
     const changeHandle: (i: number) => void = i => {
       console.log(`current image index: ${i}`)
+    }
+    const showHandle: (isShow: boolean) => void = isShow => {
+      console.log(`component is show: ${isShow}`)
     }
     const closeHandle = () => {
       console.log('close component')
@@ -60,7 +64,8 @@ export default defineComponent({
       showImagesByComponent,
       showImagesByJs,
       closeHandle,
-      changeHandle
+      changeHandle,
+      showHandle
     }
   }
 })

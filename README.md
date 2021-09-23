@@ -4,9 +4,9 @@
 
 > ❗ vue图片查看组件（vue image viewer component），```2.x```版本为```vue@3.x```组件  
 
-> ❗ 如需在```vue@2.x```中使用，请使用 [![vue-img-viewr@1.0.5](https://img.shields.io/badge/npm%20vue--img--viewr-v1.0.5-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.5)，Github v1.x地址 [![github 1.x](https://img.shields.io/badge/github%20vue--img--viewr-1.x-green)](https://github.com/jekorx/vue-img-viewr/tree/1.x)  
-> ```yarn add vue-img-viewr@^1.0.5```  
-> ```npm i vue-img-viewr@^1.0.5 -S```  
+> ❗ 如需在```vue@2.x```中使用，请使用 [![vue-img-viewr@1.0.6](https://img.shields.io/badge/npm%20vue--img--viewr-v1.0.6-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.6)，Github v1.x地址 [![github 1.x](https://img.shields.io/badge/github%20vue--img--viewr-1.x-green)](https://github.com/jekorx/vue-img-viewr/tree/1.x)  
+> ```yarn add vue-img-viewr@^1.0.6```  
+> ```npm i vue-img-viewr@^1.0.6 -S```  
 
 ### 示例
 
@@ -45,6 +45,9 @@ const showImagesByJs: (i: number) => void = i => {
     index: i,
     onSwitch: (i: number) => void = i => {
       console.log(`current image index: ${i}`)
+    },
+    onShow: (isShow: boolean) => void = isShow => {
+      console.log(`component is show: ${isShow}`)
     },
     onClose: () => {
       console.log('closed')
@@ -100,7 +103,8 @@ export default {
         onSwitch: changeHandle,
         onClose: () => {
           console.log('closed js')
-        }
+        },
+        onShow: showHandle
       })
     }
     const changeHandle: (i: number) => void = i => {
@@ -110,6 +114,9 @@ export default {
       console.log('closed component')
       visible.value = false
     }
+    const showHandle: (isShow: boolean) => void = isShow => {
+      console.log(`component is show: ${isShow}`)
+    }
     return {
       urls,
       index,
@@ -117,7 +124,8 @@ export default {
       showImagesByComponent,
       showImagesByJs,
       closeHandle,
-      changeHandle
+      changeHandle,
+      showHandle
     }
   }
 }
@@ -141,7 +149,7 @@ export default {
       <img :src="url" />
     </div>
   </div>
-  <ImgViewr :visible="visible" :urls="urls" :initial-index="index" @close="closeHandle" @switch="changeHandle" />
+  <ImgViewr :visible="visible" :urls="urls" :initial-index="index" @close="closeHandle" @switch="changeHandle" @show="showHandle" />
   <h3>通过js方法调用</h3>
   <div class="imgs">
     <div v-for="(url, i) in urls" class="img" :key="i" @click="() => showImagesByJs(i)">
@@ -186,6 +194,7 @@ export default {
 | index            | 显示的图片索引（仅限于通过js方法调用参数）  | number          | —             | 0      |
 | onSwitch         | 图片切换回调函数 Function (index)          | function        | —             | —      |
 | onClose          | 关闭回调函数                               | function        | —             | —      |
+| onShow           | 组件显示关闭监听 Function(isShow) （主要用于js方式调用）| function   | —      | —     |
 | zIndex           | 层级                                       | number          | —             | 3000    |
 | lockScroll       | 是否在查看图片时将 body 滚动锁定            | boolean         | true / false   | true    |
 | closeOnClickMask | 点击蒙层关闭                               | boolean         | true / false   | true    |
@@ -198,3 +207,4 @@ export default {
 | :----- | :-------------------------------------- | :--- |
 | close  | 关闭事件，将 visible 设为 false 关闭窗口 | -    |
 | switch | 图片切换事件                            | index |
+| show   | 组件显示关闭监听（主要用于js方式调用）   | isShow |

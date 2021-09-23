@@ -151,6 +151,7 @@ const downloadImage = (src: string, filename: string, ext: string) => {
 
 const CLOSE_EVENT = 'close'
 const SWITCH_EVENT = 'switch'
+const SHOW_EVENT = 'show'
 const EVENT_CODE = {
   esc: 'Escape',
   left: 'ArrowLeft', // 37
@@ -188,7 +189,7 @@ export default defineComponent({
       default: true
     }
   },
-  emits: [CLOSE_EVENT, SWITCH_EVENT],
+  emits: [CLOSE_EVENT, SWITCH_EVENT, SHOW_EVENT],
   setup (props: ImgViewr, { emit }) {
     // 为同时兼容vue组件方式和js方式调用的变量
     const initIndex = ref(0)
@@ -199,6 +200,7 @@ export default defineComponent({
     const images = ref<string[]>([])
     const closeHandle = ref<null | Function>(null)
     const switchHandle = ref<null | Function>(null)
+    const showHandle = ref<null | Function>(null)
 
     const index = ref(0)
     const infinite = ref(true)
@@ -270,6 +272,8 @@ export default defineComponent({
           clazz.remove('img-viewr__body-lock')
         }
       }
+      showHandle.value?.(val)
+      emit(SHOW_EVENT, val)
     })
     watch(index, val => {
       reset()
@@ -473,6 +477,7 @@ export default defineComponent({
       imgStyle,
       closeHandle,
       switchHandle,
+      showHandle,
       hide,
       prev,
       next,
