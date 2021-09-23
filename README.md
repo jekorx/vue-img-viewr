@@ -1,12 +1,12 @@
 # vue-img-viewr
 
-[![npm package](https://img.shields.io/badge/npm-v1.0.5-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.4)
+[![npm package](https://img.shields.io/badge/npm-v1.0.6-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.6)
 
 > ❗ vue图片查看组件（vue image viewer component），```1.x```版本为```vue@2.x```组件  
 
 > ❗ 如需在```vue@3.x```中使用，请使用 [![vue-img-viewr@2.x](https://img.shields.io/badge/npm%20vue--img--viewr-v2.x-blue)](https://www.npmjs.com/package/vue-img-viewr)， Github v2.x地址 [![github 2.x](https://img.shields.io/badge/github%20vue--img--viewr-v2.x-green)](https://github.com/jekorx/vue-img-viewr)  
-> ```yarn add vue-img-viewr@^2.0.1```  
-> ```npm i vue-img-viewr@^2.0.1 -S```  
+> ```yarn add vue-img-viewr```  
+> ```npm i vue-img-viewr -S```  
 
 ### 示例
 
@@ -67,11 +67,15 @@ export default {
       this.visible = true
       this.index = index
     },
+    onShow (isShow) {
+      console.log(isShow)
+    },
     showImagesByJs (index) {
       // 通过js方式显示
       showImages({
         urls: this.urls,
-        index
+        index,
+        onShow: this.onShow
       })
     }
   }
@@ -122,11 +126,15 @@ export default {
       this.visible = true
       this.index = index
     },
+    onShow (isShow) {
+      console.log(isShow)
+    },
     showImagesByJs (index) {
       // 通过js方式显示
       this.$showImages({
         urls: this.urls,
-        index
+        index,
+        onShow: this.onShow
       })
     }
   }
@@ -144,7 +152,7 @@ export default {
       <img :src="url" />
     </div>
   </div>
-  <ImgViewr :visible="visible" :urls="urls" :initialIndex="index" :onClose="() => (visible = false)" />
+  <ImgViewr :visible="visible" :urls="urls" :initialIndex="index" :on-show="onShow" :on-close="() => (visible = false)" />
   <h3>通过js方法调用</h3>
   <div class="imgs">
     <div v-for="(url, i) in urls" class="img" :key="`j_${i}`" @click="() => showImagesByJs(i)">
@@ -187,8 +195,9 @@ export default {
 | visible          | 是否显示组件（仅限于通过组件方式参数）      | boolean         | true / false  | —      |
 | initialIndex     | 初始显示的图片索引（仅限于通过组件方式参数）| number          | —             | 0      |
 | index            | 显示的图片索引（仅限于通过js方法调用参数）  | number          | —             | 0      |
-| onSwitch         | 图片切换函数 Function (index)              | function        | —             | —      |
+| onSwitch         | 图片切换函数 Function(index)              | function        | —             | —      |
 | onClose          | 关闭函数（通过js方法调用，返回true才会关闭；组件方式可以直接设置visible为false） | function | — | — |
+| onShow           | 组件显示关闭监听 Function(isShow) （主要用于js方式调用）| function          | — | — |
 | zIndex           | 层级                                      | number          | —             | 3000    |
 | lockScroll       | 是否在查看图片时将 body 滚动锁定           | boolean         | true / false   | true    |
 | closeOnClickMask | 点击蒙层关闭                              | boolean         | true / false   | true    |

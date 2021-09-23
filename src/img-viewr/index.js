@@ -43,6 +43,7 @@ const showImages = options => {
     zIndex: 3000,
     onSwitch: () => { },
     onClose: () => true,
+    onShow: () => { },
     index: 0
   }, options)
 

@@ -1,5 +1,10 @@
 # 更新日志
 
+#### 1.0.6 (2021-09-23)
+
+* 增加显示关闭组件监听函数```onShow```，主要用于js方式调用，```Function(isShow: boolean)```
+* 更新README
+
 #### 1.0.5 (2021-07-27)
 
 * Reset transform when modal is visible

@@ -177,6 +177,10 @@ export default {
       type: Function,
       default: () => {}
     },
+    onShow: {
+      type: Function,
+      default: () => {}
+    },
     initialIndex: {
       type: Number,
       default: 0
@@ -242,6 +246,7 @@ export default {
           clazz.remove('img-viewr__body-lock')
         }
       }
+      this.onShow && this.onShow(val)
     }
   },
   mounted () {

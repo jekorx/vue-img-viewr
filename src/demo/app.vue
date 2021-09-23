@@ -6,7 +6,7 @@
         <img :src="url" />
       </div>
     </div>
-    <ImgViewr :visible="visible" :urls="urls" :initialIndex="index" :onClose="() => (visible = false)" />
+    <ImgViewr :visible="visible" :urls="urls" :initialIndex="index" :on-show="onShow" :on-close="() => (visible = false)" />
     <h3>通过js方法调用</h3>
     <div class="imgs">
       <div v-for="(url, i) in urls" class="img" :key="i" @click="() => showImagesByJs(i)">
@@ -38,10 +38,14 @@ export default {
       this.visible = true
       this.index = index
     },
+    onShow (isShow) {
+      console.log(isShow)
+    },
     showImagesByJs (index) {
       this.$showImages({
         urls: this.urls,
-        index
+        index,
+        onShow: this.onShow
       })
     }
   }
