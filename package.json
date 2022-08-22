@@ -1,6 +1,6 @@
 {
   "name": "vue-img-viewr",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "vue图片查看组件（vue image viewer component），with vue@3.x",
   "author": "jekorx",
   "files": [
