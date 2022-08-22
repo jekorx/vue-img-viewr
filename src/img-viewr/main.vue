@@ -108,7 +108,7 @@ const rafThrottle = fn => {
 
 // 是否为火狐浏览器
 const isFirefox = () => {
-  return !Vue.prototype.$isServer && !!window.navigator.userAgent.match(/firefox/i)
+  return !isServer && !!window.navigator.userAgent.match(/firefox/i)
 }
 
 // 图片模式，填充窗口、原始大小

@@ -15,14 +15,10 @@ module.exports = merge(baseWebpackConfig, {
   },
   output: {
     path: resolve('lib'),
-    filename: 'vue-img-viewr.js',
-    chunkFilename: '[id].js',
-    libraryExport: 'default',
-    library: 'VueImgViewr',
-    libraryTarget: 'commonjs2'
+    library: 'vue-img-viewr',
   },
   externals: {
-    vue: 'vue'
+    vue: 'Vue'
   },
   performance: {
     hints: false

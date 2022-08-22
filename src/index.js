@@ -12,7 +12,8 @@ if (typeof window !== 'undefined' && window.Vue) {
 ImgViewr.showImages = showImages
 
 export {
-  showImages
+  showImages,
+  ImgViewr
 }
 
 export default ImgViewr

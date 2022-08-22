@@ -1,6 +1,6 @@
 # vue-img-viewr
 
-[![npm package](https://img.shields.io/badge/npm-v1.0.6-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.6)
+[![npm package](https://img.shields.io/badge/npm-v1.0.7-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.7)
 
 > ❗ vue图片查看组件（vue image viewer component），```1.x```版本为```vue@2.x```组件  
 
@@ -18,9 +18,9 @@
 
 ```bash
 # 安装依赖
-yarn add vue-img-viewr@^1.0.5
+yarn add vue-img-viewr@^1.0.7
 # or
-npm i vue-img-viewr@^1.0.5 -S
+npm i vue-img-viewr@^1.0.7 -S
 ```
 
 > 使用，SPA，非SSR  
@@ -70,12 +70,19 @@ export default {
     onShow (isShow) {
       console.log(isShow)
     },
+    changeHandle (i) {
+      console.log(`current image index: ${i}`)
+    },
     showImagesByJs (index) {
       // 通过js方式显示
       showImages({
         urls: this.urls,
         index,
-        onShow: this.onShow
+        onShow: this.onShow,
+        onClose: () => {
+          console.log('close with js')
+          return true
+        },
       })
     }
   }
@@ -129,12 +136,19 @@ export default {
     onShow (isShow) {
       console.log(isShow)
     },
+    changeHandle (i) {
+      console.log(`current image index: ${i}`)
+    },
     showImagesByJs (index) {
       // 通过js方式显示
       this.$showImages({
         urls: this.urls,
         index,
-        onShow: this.onShow
+        onShow: this.onShow,
+        onClose: () => {
+          console.log('close with js')
+          return true
+        },
       })
     }
   }
@@ -152,7 +166,7 @@ export default {
       <img :src="url" />
     </div>
   </div>
-  <ImgViewr :visible="visible" :urls="urls" :initialIndex="index" :on-show="onShow" :on-close="() => (visible = false)" />
+  <ImgViewr :visible="visible" :urls="urls" :initialIndex="index" :on-show="onShow" :on-switch="changeHandle" :on-close="() => (visible = false)" />
   <h3>通过js方法调用</h3>
   <div class="imgs">
     <div v-for="(url, i) in urls" class="img" :key="`j_${i}`" @click="() => showImagesByJs(i)">
