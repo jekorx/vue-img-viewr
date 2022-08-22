@@ -13,6 +13,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/img-viewr/index.ts'),
       name: 'vue-img-viewr'
     },
+    minify: true,
     outDir: 'lib',
     rollupOptions: {
       // 请确保外部化那些你的库中不需要的依赖

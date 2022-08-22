@@ -1,5 +1,9 @@
 # 更新日志
 
+#### 2.0.9 (2022-08-22)
+
+* 增加 style min css
+
 #### 2.0.8 (2021-09-23)
 
 * 增加显示关闭组件监听函数```onShow```，主要用于js方式调用，```Function(isShow: boolean)```
@@ -40,6 +44,11 @@
 * 升级为vue@3.x版本
 * 基于vite@2.x开发
 * vue@2.x版本请使用 [![vue-img-viewr@1.0.4](https://img.shields.io/badge/npm%20vue--img--viewr-v1.0.4-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.4)， Github v1.x地址 [![github 1.x](https://img.shields.io/badge/github%20vue--img--viewr-1.x-green)](https://github.com/jekorx/vue-img-viewr/tree/1.x)
+
+#### 1.0.7 (2022-08-22)
+
+* 分离打包方式，增加cdn支持
+* 增加 style min css
 
 #### 1.0.6 (2021-09-23)
 

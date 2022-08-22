@@ -1,6 +1,6 @@
 {
   "name": "vue-img-viewr",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "vue图片查看组件（vue image viewer component），with vue@3.x",
   "author": "jekorx",
   "files": [
@@ -10,7 +10,7 @@
   ],
   "main": "./lib/vue-img-viewr.umd.js",
   "module": "./lib/vue-img-viewr.es.js",
-  "style": "./styles/index.css",
+  "style": "./styles/index.min.css",
   "exports": {
     ".": {
       "import": "./lib/vue-img-viewr.es.js",
