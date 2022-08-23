@@ -1,6 +1,6 @@
 # vue-img-viewr
 
-[![npm package](https://img.shields.io/badge/npm-v1.0.7-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.7)
+[![npm package](https://img.shields.io/badge/npm-v1.0.9-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.9)
 
 > ❗ vue图片查看组件（vue image viewer component），```1.x```版本为```vue@2.x```组件  
 
@@ -18,9 +18,9 @@
 
 ```bash
 # 安装依赖
-yarn add vue-img-viewr@^1.0.7
+yarn add vue-img-viewr@^1.0.9
 # or
-npm i vue-img-viewr@^1.0.7 -S
+npm i vue-img-viewr@^1.0.9 -S
 ```
 
 > 使用，SPA，非SSR  
@@ -198,6 +198,11 @@ export default {
   cursor: pointer;
 }
 ```
+
+### CDN引用
+
+> [vue@2.x中使用请参照](https://github.com/jekorx/vue-img-viewr/issues/4)  
+> [vue@3.x中使用请参照](https://github.com/jekorx/vue-img-viewr/issues/3)  
 
 ### 参数
 
