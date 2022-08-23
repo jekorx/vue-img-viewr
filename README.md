@@ -4,9 +4,9 @@
 
 > ❗ vue图片查看组件（vue image viewer component），```2.x```版本为```vue@3.x```组件  
 
-> ❗ 如需在```vue@2.x```中使用，请使用 [![vue-img-viewr@1.0.7](https://img.shields.io/badge/npm%20vue--img--viewr-v1.0.7-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.7)，Github v1.x地址 [![github 1.x](https://img.shields.io/badge/github%20vue--img--viewr-1.x-green)](https://github.com/jekorx/vue-img-viewr/tree/1.x)  
-> ```yarn add vue-img-viewr@^1.0.7```  
-> ```npm i vue-img-viewr@^1.0.7 -S```  
+> ❗ 如需在```vue@2.x```中使用，请使用 [![vue-img-viewr@1.0.9](https://img.shields.io/badge/npm%20vue--img--viewr-v1.0.9-blue)](https://www.npmjs.com/package/vue-img-viewr/v/1.0.9)，Github v1.x地址 [![github 1.x](https://img.shields.io/badge/github%20vue--img--viewr-1.x-green)](https://github.com/jekorx/vue-img-viewr/tree/1.x)  
+> ```yarn add vue-img-viewr@^1.0.9```  
+> ```npm i vue-img-viewr@^1.0.9 -S```  
 
 ### 示例
 
@@ -181,6 +181,11 @@ export default {
   cursor: pointer;
 }
 ```
+
+### CDN引用
+
+> [vue@2.x中使用请参照](https://github.com/jekorx/vue-img-viewr/issues/4)  
+> [vue@3.x中使用请参照](https://github.com/jekorx/vue-img-viewr/issues/3)  
 
 ### 参数
 
