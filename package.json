@@ -1,17 +1,17 @@
 {
   "name": "vue-img-viewr",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "vue图片查看组件（vue image viewer component）",
   "author": "jekorx",
-  "main": "lib/vue-img-viewr.cjs.js",
+  "main": "lib/vue-img-viewr.umd.js",
   "private": false,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --colors --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "webpack --config build/webpack.prod.umd.conf.js && webpack --config build/webpack.prod.cjs.conf.js",
+    "build": "webpack --config build/webpack.prod.umd.conf.js && webpack --config build/webpack.prod.min.conf.js",
     "build:show": "webpack --config build/webpack.show.conf.js"
   },
-  "dependencies": {
+  "peerDependencies": {
     "vue": "^2.6.12"
   },
   "devDependencies": {

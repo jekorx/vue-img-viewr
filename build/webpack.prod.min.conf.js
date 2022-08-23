@@ -4,8 +4,10 @@ const prodWebpackConfig = require('./webpack.prod.conf')
 
 module.exports = merge(prodWebpackConfig, {
   output: {
-    filename: 'vue-img-viewr.cjs.js',
-    libraryExport: 'default',
-    libraryTarget: 'commonjs2'
+    filename: 'vue-img-viewr.min.js',
+    libraryTarget: 'window'
+  },
+  externals: {
+    vue: 'Vue'
   }
 })
